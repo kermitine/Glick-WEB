@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Glick Web</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/glick.css') }}">
+    <script src="{{ url_for('static', filename='js/glick.js') }}" defer></script>
+  </head>
+  <body class="{{ 'is-embed' if embed else 'is-standalone' }}">
+    <div class="glick-loader" id="glick-loader" role="status" aria-live="polite">
+      <span aria-hidden="true"></span>
+      <strong>Loading Glick...</strong>
+    </div>
+
+    <main class="glick-shell" id="glick-shell" aria-label="Glick Web converter">
+      <section class="converter-panel">
+        <header class="converter-header">
+          <div class="brand-lockup">
+            <span class="brand-mark" aria-hidden="true">G</span>
+            <div>
+              <p>Glickcrypt</p>
+              <h1>Glick Web</h1>
+            </div>
+          </div>
+          <span class="version-pill">v{{ version }}</span>
+        </header>
+
+        <form class="converter-form" id="converter-form">
+          <div class="mode-control" aria-label="Conversion mode">
+            <label>
+              <input type="radio" name="mode" value="encrypt" checked>
+              <span>Encrypt</span>
+            </label>
+            <label>
+              <input type="radio" name="mode" value="decrypt">
+              <span>Decrypt</span>
+            </label>
+          </div>
+
+          <div class="text-grid">
+            <label class="text-field" for="source-text">
+              <span>Input</span>
+              <textarea id="source-text" name="text" spellcheck="true"></textarea>
+            </label>
+
+            <label class="text-field" for="result-text">
+              <span>Output</span>
+              <textarea id="result-text" readonly></textarea>
+            </label>
+          </div>
+
+          <div class="actions">
+            <button class="primary-button" id="convert-button" type="submit">
+              <span>Convert</span>
+            </button>
+            <button class="ghost-button" id="swap-button" type="button">Swap</button>
+            <button class="ghost-button" id="copy-button" type="button">Copy</button>
+            <button class="ghost-button" id="clear-button" type="button">Clear</button>
+          </div>
+
+          <p class="status-line" id="status-line" aria-live="polite">Ready</p>
+        </form>
+      </section>
+    </main>
+  </body>
+</html>

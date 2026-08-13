@@ -1,0 +1,23 @@
+services:
+  glick-web:
+    image: glick-web:latest
+    pull_policy: build
+    build:
+      context: https://github.com/kermitine/Glick-WEB.git#main
+      pull: true
+    ports:
+      - "${GLICK_WEB_PORT:-8080}:8080"
+    environment:
+      PORT: "8080"
+      GLICK_FRAME_ANCESTORS: "${GLICK_FRAME_ANCESTORS:-*}"
+    restart: unless-stopped
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/healthz', timeout=2).read()"
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s

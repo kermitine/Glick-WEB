@@ -1,0 +1,467 @@
+:root {
+  --bg: #090c10;
+  --panel: #111820;
+  --panel-2: #0d1218;
+  --field: #070a0d;
+  --line: #303942;
+  --line-strong: #4c5c67;
+  --text: #f4f7f8;
+  --muted: #a8b5bc;
+  --red: #f21f35;
+  --red-soft: rgba(242, 31, 53, 0.18);
+  --green: #34d399;
+  --gold: #f0b84b;
+  --shadow: rgba(0, 0, 0, 0.38);
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  background: var(--bg);
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  background:
+    linear-gradient(180deg, rgba(242, 31, 53, 0.08), transparent 34rem),
+    var(--bg);
+  color: var(--text);
+  font: 16px/1.5 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+body.is-embed {
+  min-height: 360px;
+  background: transparent;
+}
+
+button,
+textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+.glick-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 12px;
+  min-height: 360px;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--text);
+}
+
+body.is-embed .glick-loader {
+  position: absolute;
+  border-radius: 8px;
+}
+
+.glick-loader span {
+  width: 34px;
+  height: 34px;
+  border: 3px solid rgba(242, 31, 53, 0.24);
+  border-top-color: var(--red);
+  border-radius: 50%;
+  animation: glick-spin 800ms linear infinite;
+}
+
+.glick-loader strong {
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.glick-loader[hidden] {
+  display: none;
+}
+
+.glick-shell {
+  width: min(1024px, calc(100% - 32px));
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: clamp(16px, 4vw, 40px) 0;
+  display: grid;
+  align-content: center;
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity 180ms ease,
+    transform 180ms ease;
+}
+
+body.is-embed .glick-shell {
+  width: 100%;
+  min-height: 360px;
+  padding: 0;
+}
+
+.glick-shell.is-loaded {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.converter-panel {
+  width: 100%;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, rgba(244, 247, 248, 0.035), transparent 11rem),
+    var(--panel);
+  box-shadow: 0 24px 70px var(--shadow);
+}
+
+body.is-embed .converter-panel {
+  min-height: 360px;
+  box-shadow: none;
+}
+
+.converter-header {
+  min-height: 84px;
+  padding: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-bottom: 1px solid var(--line);
+  background: rgba(7, 10, 13, 0.46);
+}
+
+.brand-lockup {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-mark {
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(242, 31, 53, 0.5);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(242, 31, 53, 0.28), rgba(52, 211, 153, 0.1)),
+    #12161b;
+  color: var(--text);
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+
+.brand-lockup p,
+.brand-lockup h1 {
+  margin: 0;
+}
+
+.brand-lockup p {
+  color: var(--gold);
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.brand-lockup h1 {
+  color: var(--text);
+  font-size: clamp(1.35rem, 3vw, 2rem);
+  font-weight: 800;
+  line-height: 1.05;
+}
+
+.version-pill {
+  flex: 0 0 auto;
+  padding: 6px 9px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(244, 247, 248, 0.04);
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.converter-form {
+  padding: 18px;
+  display: grid;
+  gap: 16px;
+}
+
+.mode-control {
+  width: min(100%, 360px);
+  min-height: 44px;
+  padding: 4px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel-2);
+}
+
+.mode-control label {
+  min-width: 0;
+  position: relative;
+}
+
+.mode-control input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+}
+
+.mode-control span {
+  min-height: 34px;
+  display: grid;
+  place-items: center;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  color: var(--muted);
+  font-size: 0.92rem;
+  font-weight: 800;
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease,
+    transform 160ms ease;
+}
+
+.mode-control input:checked + span {
+  border-color: rgba(242, 31, 53, 0.55);
+  background: var(--red-soft);
+  color: var(--text);
+}
+
+.mode-control input:focus-visible + span {
+  outline: 2px solid var(--green);
+  outline-offset: 2px;
+}
+
+.text-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.text-field {
+  min-width: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.text-field > span {
+  color: var(--muted);
+  font-size: 0.84rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+textarea {
+  width: 100%;
+  min-height: 240px;
+  resize: vertical;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--field);
+  color: var(--text);
+  line-height: 1.55;
+  caret-color: var(--red);
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    background-color 160ms ease;
+}
+
+textarea:focus {
+  border-color: rgba(52, 211, 153, 0.68);
+  box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.12);
+  outline: 0;
+}
+
+textarea[readonly] {
+  color: #dce9ee;
+}
+
+textarea.is-populated {
+  animation: glick-result-pop 260ms ease;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.primary-button,
+.ghost-button {
+  min-height: 42px;
+  min-width: 92px;
+  padding: 0 15px;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 8px;
+  font-weight: 800;
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease,
+    color 160ms ease,
+    transform 160ms ease;
+}
+
+.primary-button {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(242, 31, 53, 0.8);
+  background: var(--red);
+  color: #fff;
+}
+
+.primary-button::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.24), transparent);
+  transform: translateX(-120%);
+}
+
+.converter-form.is-working .primary-button::after {
+  animation: glick-button-sweep 900ms ease infinite;
+}
+
+.ghost-button {
+  border: 1px solid var(--line);
+  background: rgba(244, 247, 248, 0.04);
+  color: var(--text);
+}
+
+.primary-button:hover,
+.ghost-button:hover {
+  transform: translateY(-1px);
+}
+
+.ghost-button:hover {
+  border-color: var(--line-strong);
+  background: rgba(244, 247, 248, 0.075);
+}
+
+.primary-button:focus-visible,
+.ghost-button:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 2px;
+}
+
+.primary-button:disabled,
+.ghost-button:disabled {
+  cursor: wait;
+  opacity: 0.68;
+  transform: none;
+}
+
+.status-line {
+  min-height: 24px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.status-line.is-error {
+  color: #ff9aa6;
+}
+
+@media (max-width: 760px) {
+  .glick-shell {
+    width: min(100% - 20px, 1024px);
+    align-content: start;
+  }
+
+  .converter-header {
+    min-height: 76px;
+    padding: 14px;
+  }
+
+  .brand-mark {
+    width: 40px;
+    height: 40px;
+    flex-basis: 40px;
+  }
+
+  .converter-form {
+    padding: 14px;
+  }
+
+  .text-grid {
+    grid-template-columns: 1fr;
+  }
+
+  textarea {
+    min-height: 190px;
+  }
+
+  .actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .primary-button,
+  .ghost-button {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 420px) {
+  .converter-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .version-pill {
+    align-self: flex-start;
+  }
+
+  .actions {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+@keyframes glick-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes glick-result-pop {
+  from {
+    border-color: rgba(52, 211, 153, 0.68);
+    box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.12);
+  }
+}
+
+@keyframes glick-button-sweep {
+  to {
+    transform: translateX(120%);
+  }
+}

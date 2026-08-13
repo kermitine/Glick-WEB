@@ -6,7 +6,7 @@ services:
       context: https://github.com/kermitine/Glick-WEB.git#main
       pull: true
     ports:
-      - "${GLICK_WEB_PORT:-8080}:8080"
+      - "${GLICK_WEB_PORT:-5005}:8080"
     environment:
       PORT: "8080"
       GLICK_FRAME_ANCESTORS: "${GLICK_FRAME_ANCESTORS:-*}"

@@ -17,7 +17,6 @@
       <section class="converter-panel">
         <header class="converter-header">
           <div class="brand-lockup">
-            <span class="brand-mark" aria-hidden="true">G</span>
             <div>
               <p>Glickcrypt</p>
               <h1>Glick Web</h1>
@@ -50,12 +49,18 @@
             </label>
           </div>
 
+          <section class="process-console" aria-label="Conversion process">
+            <div class="console-header">
+              <span>Process</span>
+              <span id="console-state">idle</span>
+            </div>
+            <pre id="process-log">waiting for input</pre>
+          </section>
+
           <div class="actions">
             <button class="primary-button" id="convert-button" type="submit">
               <span>Convert</span>
             </button>
-            <button class="ghost-button" id="swap-button" type="button">Swap</button>
-            <button class="ghost-button" id="copy-button" type="button">Copy</button>
             <button class="ghost-button" id="clear-button" type="button">Clear</button>
           </div>
 

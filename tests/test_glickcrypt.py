@@ -1,6 +1,6 @@
 import unittest
 
-from glickcrypt import DECRYPTION_FAILURE, decrypt_text, decrypt_word, encrypt_text
+from glickcrypt import DECRYPTION_FAILURE, convert_text, decrypt_text, decrypt_word, encrypt_text
 
 
 class FakeDictionary:
@@ -28,6 +28,12 @@ class GlickcryptTests(unittest.TestCase):
     def test_decrypt_word_returns_failure_for_invalid_ciphertext(self):
         dictionary = FakeDictionary({"hello"})
         self.assertEqual(decrypt_word("plain", dictionary), DECRYPTION_FAILURE)
+
+    def test_convert_text_includes_process_steps(self):
+        result = convert_text("encrypt", "Hello")
+        self.assertEqual(result.result, "Ellohay")
+        self.assertIn("mode: encrypt", result.steps)
+        self.assertIn("01: Hello -> ellohay", result.steps)
 
 
 if __name__ == "__main__":

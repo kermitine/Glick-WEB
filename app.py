@@ -77,6 +77,7 @@ def create_app() -> Flask:
         return jsonify(
             mode=conversion.mode,
             result=conversion.result,
+            steps=conversion.steps,
             text=conversion.text,
         )
 

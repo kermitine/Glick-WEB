@@ -1,17 +1,15 @@
 :root {
-  --bg: #090c10;
-  --panel: #111820;
-  --panel-2: #0d1218;
-  --field: #070a0d;
-  --line: #303942;
-  --line-strong: #4c5c67;
-  --text: #f4f7f8;
-  --muted: #a8b5bc;
-  --red: #f21f35;
-  --red-soft: rgba(242, 31, 53, 0.18);
-  --green: #34d399;
-  --gold: #f0b84b;
-  --shadow: rgba(0, 0, 0, 0.38);
+  --bg: #0b0d10;
+  --panel: #12161a;
+  --panel-soft: #171c21;
+  --field: #090b0e;
+  --line: #2e353d;
+  --line-strong: #48525d;
+  --text: #f2f5f6;
+  --muted: #9ca8b0;
+  --accent: #d83a42;
+  --accent-soft: rgba(216, 58, 66, 0.14);
+  --ok: #48b38a;
   color-scheme: dark;
 }
 
@@ -28,11 +26,9 @@ body {
   min-width: 320px;
   min-height: 100vh;
   margin: 0;
-  background:
-    linear-gradient(180deg, rgba(242, 31, 53, 0.08), transparent 34rem),
-    var(--bg);
+  background: var(--bg);
   color: var(--text);
-  font: 16px/1.5 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font: 15px/1.5 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 body.is-embed {
@@ -71,15 +67,15 @@ body.is-embed .glick-loader {
 .glick-loader span {
   width: 34px;
   height: 34px;
-  border: 3px solid rgba(242, 31, 53, 0.24);
-  border-top-color: var(--red);
+  border: 3px solid rgba(216, 58, 66, 0.24);
+  border-top-color: var(--accent);
   border-radius: 50%;
-  animation: glick-spin 800ms linear infinite;
+  animation: glick-spin 900ms linear infinite;
 }
 
 .glick-loader strong {
   font-size: 0.95rem;
-  font-weight: 700;
+  font-weight: 650;
 }
 
 .glick-loader[hidden] {
@@ -87,17 +83,15 @@ body.is-embed .glick-loader {
 }
 
 .glick-shell {
-  width: min(1024px, calc(100% - 32px));
+  width: min(980px, calc(100% - 32px));
   min-height: 100vh;
   margin: 0 auto;
-  padding: clamp(16px, 4vw, 40px) 0;
+  padding: clamp(16px, 4vw, 32px) 0;
   display: grid;
   align-content: center;
   opacity: 0;
-  transform: translateY(8px);
-  transition:
-    opacity 180ms ease,
-    transform 180ms ease;
+  transform: translateY(6px);
+  transition: opacity 180ms ease, transform 180ms ease;
 }
 
 body.is-embed .glick-shell {
@@ -116,49 +110,26 @@ body.is-embed .glick-shell {
   overflow: hidden;
   border: 1px solid var(--line);
   border-radius: 8px;
-  background:
-    linear-gradient(180deg, rgba(244, 247, 248, 0.035), transparent 11rem),
-    var(--panel);
-  box-shadow: 0 24px 70px var(--shadow);
+  background: var(--panel);
 }
 
 body.is-embed .converter-panel {
   min-height: 360px;
-  box-shadow: none;
 }
 
 .converter-header {
-  min-height: 84px;
-  padding: 18px;
+  min-height: 68px;
+  padding: 16px 18px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
   border-bottom: 1px solid var(--line);
-  background: rgba(7, 10, 13, 0.46);
+  background: #0f1216;
 }
 
 .brand-lockup {
   min-width: 0;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.brand-mark {
-  width: 44px;
-  height: 44px;
-  flex: 0 0 44px;
-  display: grid;
-  place-items: center;
-  border: 1px solid rgba(242, 31, 53, 0.5);
-  border-radius: 8px;
-  background:
-    linear-gradient(135deg, rgba(242, 31, 53, 0.28), rgba(52, 211, 153, 0.1)),
-    #12161b;
-  color: var(--text);
-  font-size: 1.2rem;
-  font-weight: 800;
 }
 
 .brand-lockup p,
@@ -167,46 +138,46 @@ body.is-embed .converter-panel {
 }
 
 .brand-lockup p {
-  color: var(--gold);
+  color: var(--muted);
   font-size: 0.72rem;
-  font-weight: 800;
+  font-weight: 700;
   text-transform: uppercase;
 }
 
 .brand-lockup h1 {
   color: var(--text);
-  font-size: clamp(1.35rem, 3vw, 2rem);
-  font-weight: 800;
-  line-height: 1.05;
+  font-size: 1.45rem;
+  font-weight: 750;
+  line-height: 1.1;
 }
 
 .version-pill {
   flex: 0 0 auto;
-  padding: 6px 9px;
+  padding: 5px 8px;
   border: 1px solid var(--line);
-  border-radius: 999px;
-  background: rgba(244, 247, 248, 0.04);
+  border-radius: 6px;
+  background: var(--panel-soft);
   color: var(--muted);
-  font-size: 0.82rem;
-  font-weight: 700;
+  font-size: 0.78rem;
+  font-weight: 650;
 }
 
 .converter-form {
   padding: 18px;
   display: grid;
-  gap: 16px;
+  gap: 14px;
 }
 
 .mode-control {
-  width: min(100%, 360px);
-  min-height: 44px;
-  padding: 4px;
+  width: min(100%, 300px);
+  min-height: 40px;
+  padding: 3px;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 4px;
+  gap: 3px;
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: var(--panel-2);
+  background: var(--field);
 }
 
 .mode-control label {
@@ -221,29 +192,28 @@ body.is-embed .converter-panel {
 }
 
 .mode-control span {
-  min-height: 34px;
+  min-height: 32px;
   display: grid;
   place-items: center;
   border: 1px solid transparent;
   border-radius: 6px;
   color: var(--muted);
-  font-size: 0.92rem;
-  font-weight: 800;
-  transition:
-    background-color 160ms ease,
-    border-color 160ms ease,
-    color 160ms ease,
-    transform 160ms ease;
+  font-size: 0.9rem;
+  font-weight: 700;
+  transition: background-color 140ms ease, border-color 140ms ease, color 140ms ease;
 }
 
 .mode-control input:checked + span {
-  border-color: rgba(242, 31, 53, 0.55);
-  background: var(--red-soft);
+  border-color: rgba(216, 58, 66, 0.48);
+  background: var(--accent-soft);
   color: var(--text);
 }
 
-.mode-control input:focus-visible + span {
-  outline: 2px solid var(--green);
+.mode-control input:focus-visible + span,
+.primary-button:focus-visible,
+.ghost-button:focus-visible,
+textarea:focus {
+  outline: 2px solid var(--ok);
   outline-offset: 2px;
 }
 
@@ -256,45 +226,76 @@ body.is-embed .converter-panel {
 .text-field {
   min-width: 0;
   display: grid;
-  gap: 8px;
+  gap: 7px;
 }
 
-.text-field > span {
+.text-field > span,
+.console-header {
   color: var(--muted);
-  font-size: 0.84rem;
-  font-weight: 800;
+  font-size: 0.78rem;
+  font-weight: 700;
   text-transform: uppercase;
 }
 
 textarea {
   width: 100%;
-  min-height: 240px;
+  min-height: 210px;
   resize: vertical;
-  padding: 14px;
+  padding: 13px;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: var(--field);
   color: var(--text);
   line-height: 1.55;
-  caret-color: var(--red);
-  transition:
-    border-color 160ms ease,
-    box-shadow 160ms ease,
-    background-color 160ms ease;
+  caret-color: var(--accent);
+  transition: border-color 140ms ease, box-shadow 140ms ease;
 }
 
 textarea:focus {
-  border-color: rgba(52, 211, 153, 0.68);
-  box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.12);
-  outline: 0;
+  border-color: rgba(72, 179, 138, 0.68);
+  box-shadow: 0 0 0 3px rgba(72, 179, 138, 0.12);
 }
 
 textarea[readonly] {
-  color: #dce9ee;
+  color: #dce5e8;
 }
 
 textarea.is-populated {
-  animation: glick-result-pop 260ms ease;
+  animation: glick-result-ready 240ms ease;
+}
+
+.process-console {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--field);
+}
+
+.console-header {
+  min-height: 34px;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid var(--line);
+  background: #0f1317;
+}
+
+#console-state {
+  color: var(--ok);
+  text-transform: none;
+}
+
+#process-log {
+  height: 112px;
+  margin: 0;
+  overflow: auto;
+  padding: 10px 12px;
+  color: #cfd8dc;
+  font: 0.86rem/1.55 "Cascadia Mono", "Consolas", monospace;
+  white-space: pre-wrap;
 }
 
 .actions {
@@ -306,74 +307,47 @@ textarea.is-populated {
 
 .primary-button,
 .ghost-button {
-  min-height: 42px;
+  min-height: 40px;
   min-width: 92px;
-  padding: 0 15px;
+  padding: 0 14px;
   display: inline-grid;
   place-items: center;
   border-radius: 8px;
-  font-weight: 800;
-  transition:
-    border-color 160ms ease,
-    background-color 160ms ease,
-    color 160ms ease,
-    transform 160ms ease;
+  font-weight: 700;
+  transition: background-color 140ms ease, border-color 140ms ease, color 140ms ease;
 }
 
 .primary-button {
-  position: relative;
-  overflow: hidden;
-  border: 1px solid rgba(242, 31, 53, 0.8);
-  background: var(--red);
+  border: 1px solid rgba(216, 58, 66, 0.72);
+  background: var(--accent);
   color: #fff;
 }
 
-.primary-button::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.24), transparent);
-  transform: translateX(-120%);
-}
-
-.converter-form.is-working .primary-button::after {
-  animation: glick-button-sweep 900ms ease infinite;
+.primary-button:hover {
+  background: #c4333b;
 }
 
 .ghost-button {
   border: 1px solid var(--line);
-  background: rgba(244, 247, 248, 0.04);
+  background: var(--panel-soft);
   color: var(--text);
-}
-
-.primary-button:hover,
-.ghost-button:hover {
-  transform: translateY(-1px);
 }
 
 .ghost-button:hover {
   border-color: var(--line-strong);
-  background: rgba(244, 247, 248, 0.075);
-}
-
-.primary-button:focus-visible,
-.ghost-button:focus-visible {
-  outline: 2px solid var(--green);
-  outline-offset: 2px;
 }
 
 .primary-button:disabled,
 .ghost-button:disabled {
   cursor: wait;
   opacity: 0.68;
-  transform: none;
 }
 
 .status-line {
-  min-height: 24px;
+  min-height: 22px;
   margin: 0;
   color: var(--muted);
-  font-size: 0.9rem;
+  font-size: 0.88rem;
 }
 
 .status-line.is-error {
@@ -382,21 +356,11 @@ textarea.is-populated {
 
 @media (max-width: 760px) {
   .glick-shell {
-    width: min(100% - 20px, 1024px);
+    width: min(100% - 20px, 980px);
     align-content: start;
   }
 
-  .converter-header {
-    min-height: 76px;
-    padding: 14px;
-  }
-
-  .brand-mark {
-    width: 40px;
-    height: 40px;
-    flex-basis: 40px;
-  }
-
+  .converter-header,
   .converter-form {
     padding: 14px;
   }
@@ -406,7 +370,7 @@ textarea.is-populated {
   }
 
   textarea {
-    min-height: 190px;
+    min-height: 180px;
   }
 
   .actions {
@@ -453,15 +417,9 @@ textarea.is-populated {
   }
 }
 
-@keyframes glick-result-pop {
+@keyframes glick-result-ready {
   from {
-    border-color: rgba(52, 211, 153, 0.68);
-    box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.12);
-  }
-}
-
-@keyframes glick-button-sweep {
-  to {
-    transform: translateX(120%);
+    border-color: rgba(72, 179, 138, 0.68);
+    box-shadow: 0 0 0 3px rgba(72, 179, 138, 0.12);
   }
 }

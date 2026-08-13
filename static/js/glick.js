@@ -5,12 +5,14 @@
   const sourceText = document.getElementById("source-text");
   const resultText = document.getElementById("result-text");
   const convertButton = document.getElementById("convert-button");
-  const swapButton = document.getElementById("swap-button");
-  const copyButton = document.getElementById("copy-button");
   const clearButton = document.getElementById("clear-button");
   const statusLine = document.getElementById("status-line");
+  const processLog = document.getElementById("process-log");
+  const consoleState = document.getElementById("console-state");
 
   let resizeTimer = 0;
+  let activeRun = 0;
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   function setStatus(message, isError = false) {
     statusLine.textContent = message;
@@ -21,6 +23,57 @@
   function selectedMode() {
     const input = form.querySelector('input[name="mode"]:checked');
     return input ? input.value : "encrypt";
+  }
+
+  function sleep(milliseconds) {
+    return new Promise(resolve => {
+      window.setTimeout(resolve, reduceMotion ? 0 : milliseconds);
+    });
+  }
+
+  function setConsoleState(state) {
+    consoleState.textContent = state;
+  }
+
+  async function renderProcess(lines, runId) {
+    const entries = Array.isArray(lines) && lines.length > 0 ? lines : ["no process data"];
+    processLog.textContent = "";
+    setConsoleState("running");
+
+    for (const line of entries) {
+      if (runId !== activeRun) return false;
+
+      processLog.textContent += `${line}\n`;
+      processLog.scrollTop = processLog.scrollHeight;
+      queueResizeMessage();
+      await sleep(170);
+    }
+
+    setConsoleState("done");
+    return true;
+  }
+
+  async function typeResult(text, runId) {
+    resultText.value = "";
+    resultText.classList.remove("is-populated");
+
+    if (reduceMotion) {
+      resultText.value = text;
+      resultText.classList.add("is-populated");
+      return true;
+    }
+
+    for (const character of text) {
+      if (runId !== activeRun) return false;
+
+      resultText.value += character;
+      resultText.scrollTop = resultText.scrollHeight;
+      await sleep(24);
+    }
+
+    resultText.classList.add("is-populated");
+    queueResizeMessage();
+    return true;
   }
 
   function queueResizeMessage() {
@@ -47,11 +100,16 @@
 
   async function convertText(event) {
     event.preventDefault();
+    const runId = activeRun + 1;
+    activeRun = runId;
 
     form.classList.add("is-working");
     convertButton.disabled = true;
     resultText.classList.remove("is-populated");
+    resultText.value = "";
     setStatus("Converting");
+    setConsoleState("queued");
+    processLog.textContent = "starting\n";
 
     try {
       const response = await fetch("api/convert", {
@@ -70,46 +128,35 @@
         throw new Error(payload.error || "Conversion failed.");
       }
 
-      resultText.value = payload.result;
-      resultText.classList.add("is-populated");
+      const processFinished = await renderProcess(payload.steps, runId);
+      if (!processFinished) return;
+
+      const typingFinished = await typeResult(payload.result, runId);
+      if (!typingFinished) return;
+
       setStatus("Converted");
     } catch (error) {
       setStatus(error.message, true);
+      setConsoleState("error");
+      processLog.textContent += `error: ${error.message}\n`;
     } finally {
-      form.classList.remove("is-working");
-      convertButton.disabled = false;
-      queueResizeMessage();
-    }
-  }
-
-  function swapText() {
-    const sourceValue = sourceText.value;
-    sourceText.value = resultText.value;
-    resultText.value = sourceValue;
-    resultText.classList.toggle("is-populated", resultText.value.length > 0);
-    setStatus("Swapped");
-  }
-
-  async function copyText() {
-    if (!resultText.value) {
-      setStatus("Nothing to copy");
-      return;
-    }
-
-    try {
-      await navigator.clipboard.writeText(resultText.value);
-      setStatus("Copied");
-    } catch {
-      resultText.focus();
-      resultText.select();
-      setStatus("Select the output manually", true);
+      if (runId === activeRun) {
+        form.classList.remove("is-working");
+        convertButton.disabled = false;
+        queueResizeMessage();
+      }
     }
   }
 
   function clearText() {
+    activeRun += 1;
+    form.classList.remove("is-working");
+    convertButton.disabled = false;
     sourceText.value = "";
     resultText.value = "";
     resultText.classList.remove("is-populated");
+    processLog.textContent = "waiting for input";
+    setConsoleState("idle");
     setStatus("Ready");
     sourceText.focus();
   }
@@ -128,7 +175,5 @@
   form.addEventListener("submit", convertText);
   sourceText.addEventListener("input", queueResizeMessage);
   resultText.addEventListener("input", queueResizeMessage);
-  swapButton.addEventListener("click", swapText);
-  copyButton.addEventListener("click", copyText);
   clearButton.addEventListener("click", clearText);
 })();

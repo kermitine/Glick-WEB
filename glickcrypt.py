@@ -36,6 +36,7 @@ class ConversionResult:
     mode: str
     text: str
     result: str
+    steps: tuple[str, ...] = ()
 
 
 _dictionary: Dictionary | None = None
@@ -117,6 +118,14 @@ def encrypt_text(text: str) -> str:
     return " ".join(_capitalize_sentence_words(converted))
 
 
+def _encrypt_with_steps(text: str) -> ConversionResult:
+    words = text.split()
+    converted = [encrypt_word(word) for word in words]
+    result = " ".join(_capitalize_sentence_words(converted))
+    steps = _build_trace_steps("encrypt", words, converted, result)
+    return ConversionResult(mode="encrypt", text=text, result=result, steps=tuple(steps))
+
+
 def _filter_decryption_punctuation(chars: list[str]) -> tuple[list[str], list[str]]:
     body: list[str] = []
     trailing: list[str] = []
@@ -169,14 +178,44 @@ def decrypt_text(text: str, dictionary: Dictionary | None = None) -> str:
     return " ".join(_capitalize_sentence_words(converted))
 
 
+def _decrypt_with_steps(text: str) -> ConversionResult:
+    words = text.split()
+    dictionary = _get_dictionary() if words else None
+    converted = [decrypt_word(word, dictionary) for word in words]
+    result = " ".join(_capitalize_sentence_words(converted))
+    steps = _build_trace_steps("decrypt", words, converted, result)
+    return ConversionResult(mode="decrypt", text=text, result=result, steps=tuple(steps))
+
+
+def _build_trace_steps(mode: str, words: list[str], converted: list[str], result: str) -> list[str]:
+    steps = [
+        f"mode: {mode}",
+        f"tokens: {len(words)}",
+    ]
+
+    if not words:
+        steps.append("input: empty")
+        steps.append("result: empty")
+        return steps
+
+    for index, (source, output) in enumerate(zip(words, converted), start=1):
+        if output == source:
+            steps.append(f"{index:02d}: pass {source}")
+        elif output == DECRYPTION_FAILURE:
+            steps.append(f"{index:02d}: fail {source}")
+        else:
+            steps.append(f"{index:02d}: {source} -> {output}")
+
+    steps.append(f"result: {result}")
+    return steps
+
+
 def convert_text(mode: str, text: str) -> ConversionResult:
     normalized_mode = mode.strip().lower()
 
     if normalized_mode == "encrypt":
-        result = encrypt_text(text)
+        return _encrypt_with_steps(text)
     elif normalized_mode == "decrypt":
-        result = decrypt_text(text)
+        return _decrypt_with_steps(text)
     else:
         raise ValueError("Mode must be either 'encrypt' or 'decrypt'.")
-
-    return ConversionResult(mode=normalized_mode, text=text, result=result)

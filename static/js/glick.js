@@ -43,6 +43,20 @@
     return text.match(/\S+\s*/g) || [];
   }
 
+  function getStepOutputChunkCount(line) {
+    if (!isWordStep(line)) {
+      return 0;
+    }
+
+    const outputStart = line.lastIndexOf(" -> ");
+    if (outputStart === -1) {
+      return 1;
+    }
+
+    const output = line.slice(outputStart + 4).trim();
+    return Math.max(1, getResultChunks(output).length);
+  }
+
   async function typeResultChunk(chunk, runId) {
     for (const character of chunk) {
       if (runId !== activeRun) return false;
@@ -72,10 +86,17 @@
       processLog.scrollTop = processLog.scrollHeight;
       queueResizeMessage();
 
-      if (isWordStep(line) && nextChunk < resultChunks.length) {
-        const chunkFinished = await typeResultChunk(resultChunks[nextChunk], runId);
-        if (!chunkFinished) return false;
-        nextChunk += 1;
+      const chunkCount = getStepOutputChunkCount(line);
+      if (chunkCount > 0 && nextChunk < resultChunks.length) {
+        for (
+          let typedChunks = 0;
+          typedChunks < chunkCount && nextChunk < resultChunks.length;
+          typedChunks += 1
+        ) {
+          const chunkFinished = await typeResultChunk(resultChunks[nextChunk], runId);
+          if (!chunkFinished) return false;
+          nextChunk += 1;
+        }
       } else {
         await sleep(170);
       }

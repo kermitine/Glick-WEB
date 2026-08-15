@@ -12,7 +12,6 @@ import os
 
 from flask import Flask, jsonify, render_template, request
 
-from files.vars import version_dec, version_enc, version_gli
 from glickcrypt import DecryptionUnavailable, convert_text
 
 
@@ -42,9 +41,6 @@ def create_app() -> Flask:
         return render_template(
             "index.html",
             embed=request.args.get("embed") == "1",
-            version=version_gli,
-            version_enc=version_enc,
-            version_dec=version_dec,
         )
 
     @app.get("/embed")
@@ -52,9 +48,6 @@ def create_app() -> Flask:
         return render_template(
             "index.html",
             embed=True,
-            version=version_gli,
-            version_enc=version_enc,
-            version_dec=version_dec,
         )
 
     @app.get("/healthz")

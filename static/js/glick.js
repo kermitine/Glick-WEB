@@ -35,9 +35,34 @@
     consoleState.textContent = state;
   }
 
-  async function renderProcess(lines, runId) {
+  function isWordStep(line) {
+    return /^\d+:\s/.test(line);
+  }
+
+  function getResultChunks(text) {
+    return text.match(/\S+\s*/g) || [];
+  }
+
+  async function typeResultChunk(chunk, runId) {
+    for (const character of chunk) {
+      if (runId !== activeRun) return false;
+
+      resultText.value += character;
+      resultText.scrollTop = resultText.scrollHeight;
+      await sleep(24);
+    }
+
+    return true;
+  }
+
+  async function renderSyncedConversion(lines, result, runId) {
     const entries = Array.isArray(lines) && lines.length > 0 ? lines : ["no process data"];
+    const resultChunks = getResultChunks(result);
+    let nextChunk = 0;
+
     processLog.textContent = "";
+    resultText.value = "";
+    resultText.classList.remove("is-populated");
     setConsoleState("running");
 
     for (const line of entries) {
@@ -46,32 +71,25 @@
       processLog.textContent += `${line}\n`;
       processLog.scrollTop = processLog.scrollHeight;
       queueResizeMessage();
-      await sleep(170);
+
+      if (isWordStep(line) && nextChunk < resultChunks.length) {
+        const chunkFinished = await typeResultChunk(resultChunks[nextChunk], runId);
+        if (!chunkFinished) return false;
+        nextChunk += 1;
+      } else {
+        await sleep(170);
+      }
     }
 
-    setConsoleState("done");
-    return true;
-  }
-
-  async function typeResult(text, runId) {
-    resultText.value = "";
-    resultText.classList.remove("is-populated");
-
-    if (reduceMotion) {
-      resultText.value = text;
-      resultText.classList.add("is-populated");
-      return true;
+    while (nextChunk < resultChunks.length) {
+      const chunkFinished = await typeResultChunk(resultChunks[nextChunk], runId);
+      if (!chunkFinished) return false;
+      nextChunk += 1;
     }
 
-    for (const character of text) {
-      if (runId !== activeRun) return false;
-
-      resultText.value += character;
-      resultText.scrollTop = resultText.scrollHeight;
-      await sleep(24);
-    }
-
+    resultText.value = result;
     resultText.classList.add("is-populated");
+    setConsoleState("done");
     queueResizeMessage();
     return true;
   }
@@ -128,11 +146,8 @@
         throw new Error(payload.error || "Conversion failed.");
       }
 
-      const processFinished = await renderProcess(payload.steps, runId);
-      if (!processFinished) return;
-
-      const typingFinished = await typeResult(payload.result, runId);
-      if (!typingFinished) return;
+      const conversionFinished = await renderSyncedConversion(payload.steps, payload.result, runId);
+      if (!conversionFinished) return;
 
       setStatus("Converted");
     } catch (error) {
